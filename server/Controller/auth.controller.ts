@@ -36,7 +36,6 @@ export const signIn = async (req: Request, res: Response) => {
 export const signUp = async (req: Request, res: Response) => {
   const { email, password, name } = req.body;
   try {
-    const data = UserValidation.parse({ email, password, name });
     const hashedPassword = await hash(password, 10);
     const newUser = await User.insertOne({
       email,

@@ -4,8 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const auth_controller_1 = require("../Controller/auth.controller");
+const check_data_register_1 = require("../Middleware/check.data.register");
 const route = express_1.default.Router();
-route.get("/login", (req, res) => {
-    res.status(200).send("login page");
-});
+route.post("/login", auth_controller_1.signIn);
+route.post("/register", check_data_register_1.checkDateValidation, auth_controller_1.signUp);
 exports.default = route;
