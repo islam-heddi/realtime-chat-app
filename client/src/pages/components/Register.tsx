@@ -1,18 +1,49 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useState } from "react";
 
-export default function Login() {
+export default function Register() {
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   return (
     <div className="p-5">
       <Label>Username</Label>
-      <Input type="text" placeholder="enter your username" />
-
+      <Input
+        className="p-4 m-3"
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder="enter your username"
+      />
       <Label>Email</Label>
-      <Input type="email" placeholder="m@example.com" />
+      <Input
+        className="p-4 m-3"
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="m@example.com"
+      />
       <Label>Password</Label>
-      <Input type="password" placeholder="***********" />
-      <Button>Submit</Button>
+      <Input
+        className="p-4 m-3"
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="***********"
+      />
+      <Button className="w-full">Submit</Button>
+      <Button
+        className="w-full mt-4"
+        onClick={() => {
+          setName("");
+          setEmail("");
+          setPassword("");
+        }}
+      >
+        Reset
+      </Button>
     </div>
   );
 }
