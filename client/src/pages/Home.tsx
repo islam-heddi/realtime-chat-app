@@ -2,12 +2,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import pic from "../../public/login2.png";
+import { Toaster } from "@/components/ui/sonner";
 function Home() {
   return (
     <div className="h-[100vh] w-[100vw] inline-flex items-center justify-center bg-[#deffff] p-6 rounded-2xl ">
       <div className="p-8 h-[80vh] w-[90vw] lg:w-[80vw] bg-white shadow-xl/30 flex flex-row justify-center items-center">
         <div className="w-[40vw] max-[1024px]:w-full">
-          <h1 className="text-2xl">Chat App</h1>
+          <h1 className="text-6xl font-semibold m-5 text-center">Chatty</h1>
           <Tabs defaultValue="login">
             <TabsList className="bg-white w-full">
               <TabsTrigger
@@ -35,6 +36,7 @@ function Home() {
           <img src={pic} />
         </div>
       </div>
+      <Toaster />
     </div>
   );
 }

@@ -2,11 +2,33 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-
+import { toast } from "sonner";
+import { UserSchema } from "../../../validation/user.validation";
+import { ZodError } from "zod";
 export default function Register() {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  const handleSubmit = async () => {
+    try {
+      UserSchema.parse({
+        email,
+        password,
+        name,
+      });
+      toast.success("Registration successful!");
+    } catch (err: unknown) {
+      if (err instanceof ZodError) {
+        err.issues.forEach((issue) => {
+          toast.error(`${issue.path.join(".")}: ${issue.message}`);
+        });
+      } else {
+        toast.error("Internal server error");
+      }
+    }
+  };
+
   return (
     <div className="p-5">
       <Label>Username</Label>
@@ -33,7 +55,9 @@ export default function Register() {
         onChange={(e) => setPassword(e.target.value)}
         placeholder="***********"
       />
-      <Button className="w-full">Submit</Button>
+      <Button onClick={() => handleSubmit()} className="w-full">
+        Submit
+      </Button>
       <Button
         className="w-full mt-4"
         onClick={() => {
