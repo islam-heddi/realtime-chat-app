@@ -8,9 +8,7 @@ export const signIn = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   try {
     const result = await User.findOne({
-      where: {
-        email,
-      },
+      email,
     });
     if (!result) return res.status(400).send("email not found");
     const check = await compare(password, result.password as string);
@@ -43,6 +41,17 @@ export const signUp = async (req: Request, res: Response) => {
       name,
     });
     return res.status(200).send(newUser);
+  } catch (error: unknown) {
+    return res.status(500).send(`error: ${error}`);
+  }
+};
+
+export const signOut = async (req: Request, res: Response) => {
+  const id = req.user;
+  if (!id) return res.status(400).send("token not found please try to relogin");
+  try {
+    res.clearCookie("token");
+    return res.status(200).send(`sign out successfully`);
   } catch (error: unknown) {
     return res.status(500).send(`error: ${error}`);
   }

@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
+import user from "./routes/user.routes";
 dotenv.config();
 const app = express();
 mongoose
@@ -16,10 +17,13 @@ app.get("/", (req, res) => {
   res.send("Hello world");
 });
 
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use("/auth", auth);
-app.use(cors());
+app.use("/", user);
 const server = app.listen(PORT, () => {
   console.log(`the server is listening ${PORT}`);
 });
+
+module.exports = app;

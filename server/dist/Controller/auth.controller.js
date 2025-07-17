@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signUp = exports.signIn = void 0;
+exports.signOut = exports.signUp = exports.signIn = void 0;
 const bcrypt_1 = require("bcrypt");
 const Users_model_1 = require("../Model/Users.model");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -20,9 +20,7 @@ const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     try {
         const result = yield Users_model_1.User.findOne({
-            where: {
-                email,
-            },
+            email,
         });
         if (!result)
             return res.status(400).send("email not found");
@@ -59,3 +57,16 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.signUp = signUp;
+const signOut = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.user;
+    if (!id)
+        return res.status(400).send("token not found please try to relogin");
+    try {
+        res.clearCookie("token");
+        return res.status(200).send(`sign out successfully`);
+    }
+    catch (error) {
+        return res.status(500).send(`error: ${error}`);
+    }
+});
+exports.signOut = signOut;
