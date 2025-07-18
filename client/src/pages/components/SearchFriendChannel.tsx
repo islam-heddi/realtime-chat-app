@@ -1,6 +1,7 @@
 import { apiClient } from "@/lib/api-client";
 import { useEffect, useState } from "react";
 import { SEARCH_USER } from "@/utils/constants";
+import { useAppStore } from "@/store";
 
 type User = {
   _id: string;
@@ -10,6 +11,8 @@ type User = {
 
 export default function SearchFriendChannel({ search }: { search: string }) {
   const [users, setUsers] = useState<User[]>([]);
+  const { userInfo } = useAppStore();
+  console.log(userInfo);
   useEffect(() => {
     apiClient
       .post(SEARCH_USER, { name: search })
@@ -23,15 +26,17 @@ export default function SearchFriendChannel({ search }: { search: string }) {
     <div>
       <p>Search for "{search}" Friend or Channel</p>
       <div>
-        {users.map((value, index) => (
-          <div
-            className="cursor-pointer p-5 m-5 w-full hover:bg-gray-400 hover:shadow-xl/30 hover:shadow-black rounded-2xl"
-            key={index}
-          >
-            <span className="text-black">{value?.name}</span>{" "}
-            <span className="text-gray-700"> {value?.email}</span>
-          </div>
-        ))}
+        {users
+          .filter(({ _id }) => userInfo?._id !== _id)
+          .map((value, index) => (
+            <div
+              className="cursor-pointer p-5 m-5 w-full hover:bg-gray-400 hover:shadow-xl/30 hover:shadow-black rounded-2xl"
+              key={index}
+            >
+              <span className="text-black">{value?.name}</span>{" "}
+              <span className="text-gray-700"> {value?.email}</span>
+            </div>
+          ))}
       </div>
     </div>
   );
