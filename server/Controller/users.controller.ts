@@ -12,3 +12,13 @@ export const getUserInfo = async (req: Request, res: Response) => {
     return res.status(500).send(`error: ${error}`);
   }
 };
+
+export const searchUsers = async (req: Request, res: Response) => {
+  const { name } = req.body;
+  try {
+    const users = await User.find({ name: new RegExp(name, "i") });
+    return res.status(200).send(users);
+  } catch (error) {
+    return res.status(500).send(`error: ${error}`);
+  }
+};
