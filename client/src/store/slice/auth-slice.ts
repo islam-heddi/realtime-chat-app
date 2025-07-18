@@ -10,10 +10,10 @@ export interface User {
 
 export interface AuthSlice {
   userInfo: User | undefined;
-  setUserInfo: (userInfo: User) => void;
+  setUserInfo: (userInfo: User | undefined) => void;
 }
 
 export const createAuthSlice: StateCreator<AuthSlice> = (set) => ({
   userInfo: undefined,
-  setUserInfo: (userInfo: User) => set({ userInfo }),
+  setUserInfo: (userInfo: User | undefined) => set({ userInfo }),
 });
