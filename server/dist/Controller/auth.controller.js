@@ -34,7 +34,7 @@ const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             maxAge: 15 * 24 * 60 * 60 * 100,
             secure: true,
         });
-        return res.status(201).send("successfully logged in");
+        return res.status(201).send(result);
     }
     catch (error) {
         return res.status(500).send(`error: ${error}`);

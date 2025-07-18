@@ -1,5 +1,19 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export const createAuthSlice = (set: any) => ({
+import type { StateCreator } from "zustand";
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  image?: string;
+  color?: number;
+  profileSetup?: boolean;
+}
+
+export interface AuthSlice {
+  userInfo: User | undefined;
+  setUserInfo: (userInfo: User) => void;
+}
+
+export const createAuthSlice: StateCreator<AuthSlice> = (set) => ({
   userInfo: undefined,
-  setUserInfo: (userInfo: any) => set({ userInfo }),
+  setUserInfo: (userInfo: User) => set({ userInfo }),
 });

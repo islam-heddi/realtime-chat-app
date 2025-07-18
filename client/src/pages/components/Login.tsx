@@ -8,7 +8,9 @@ import { ZodError } from "zod";
 import { apiClient } from "@/lib/api-client";
 import { LOGIN_ROUTE } from "@/utils/constants";
 import { useNavigate } from "react-router-dom";
+import { useAppStore } from "@/store";
 export default function Login() {
+  const { setUserInfo } = useAppStore();
   const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -21,7 +23,9 @@ export default function Login() {
       });
       apiClient
         .post(LOGIN_ROUTE, { email, password }, { withCredentials: true })
-        .then(() => {
+        .then((res) => {
+          setUserInfo(res.data);
+          console.log(res.data);
           toast.success("login successful!");
           navigate("/dashboard");
         })

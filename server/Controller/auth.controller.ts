@@ -1,5 +1,4 @@
 import { hash, compare } from "bcrypt";
-import { UserValidation } from "../utils/validations";
 import type { Request, Response } from "express";
 import { User } from "../Model/Users.model";
 import jwt from "jsonwebtoken";
@@ -25,7 +24,7 @@ export const signIn = async (req: Request, res: Response) => {
       secure: true,
     });
 
-    return res.status(201).send("successfully logged in");
+    return res.status(201).send(result);
   } catch (error) {
     return res.status(500).send(`error: ${error}`);
   }
