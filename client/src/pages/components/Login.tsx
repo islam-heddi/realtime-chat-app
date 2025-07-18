@@ -7,7 +7,9 @@ import { UserLoginSchema } from "../../../validation/user.validation";
 import { ZodError } from "zod";
 import { apiClient } from "@/lib/api-client";
 import { LOGIN_ROUTE } from "@/utils/constants";
+import { useNavigate } from "react-router-dom";
 export default function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -19,7 +21,10 @@ export default function Login() {
       });
       apiClient
         .post(LOGIN_ROUTE, { email, password }, { withCredentials: true })
-        .then(() => toast.success("login successful!"))
+        .then(() => {
+          toast.success("login successful!");
+          navigate("/dashboard");
+        })
         .catch((err) => {
           console.log(err);
           toast.error("error : " + err.response.data);
