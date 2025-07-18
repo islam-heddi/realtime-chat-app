@@ -5,19 +5,33 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { UserSchema } from "../../../validation/user.validation";
 import { ZodError } from "zod";
+import { apiClient } from "@/lib/api-client";
+import { REGISTER_ROUTE } from "@/utils/constants";
+
 export default function Register() {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     try {
       UserSchema.parse({
         email,
         password,
         name,
       });
-      toast.success("Registration successful!");
+
+      apiClient
+        .post(
+          REGISTER_ROUTE,
+          { email, password, name },
+          { withCredentials: true }
+        )
+        .then(() => toast.success("Register successful!"))
+        .catch((err) => {
+          console.log(err);
+          toast.error("error : " + err.response.data);
+        });
     } catch (err: unknown) {
       if (err instanceof ZodError) {
         err.issues.forEach((issue) => {

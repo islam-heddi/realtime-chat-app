@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Register from "./components/Register";
 import Login from "./components/Login";
-import pic from "../../public/login2.png";
+import pic from "/login2.png?url";
 import { Toaster } from "@/components/ui/sonner";
 function Home() {
   return (
