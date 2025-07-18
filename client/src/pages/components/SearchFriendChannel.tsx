@@ -12,8 +12,11 @@ export default function SearchFriendChannel({ search }: { search: string }) {
   const [users, setUsers] = useState<User[]>([]);
   useEffect(() => {
     apiClient
-      .post(SEARCH_USER, { search })
-      .then((res) => setUsers(res.data))
+      .post(SEARCH_USER, { name: search })
+      .then((res) => {
+        setUsers(res.data);
+        console.log(res);
+      })
       .catch((err) => console.log(err));
   }, [search]);
   return (
