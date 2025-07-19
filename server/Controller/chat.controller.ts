@@ -1,23 +1,27 @@
 import { Request, Response } from "express";
 import { Chat } from "../Model/Chat.model";
 import { User } from "../Model/Users.model";
-export const addMessage = async (req: Request, res: Response) => {
-  const id = req.user?.id;
-  if (!id) {
-    return res.status(400).json({ error: "User ID is required" });
-  }
+export const addMessage = async (
+  senderId: string,
+  receiverId: string,
+  content: string
+) => {
   try {
-    const { receiverId, content } = req.body;
+    if (!senderId || !receiverId || !content) {
+      throw new Error("Sender ID, Receiver ID, and content are required");
+    }
 
-    const chat = await Chat.create({
-      emiterId: id,
-      receiverId,
-      content,
+    const result = await Chat.create({
+      emiterId: senderId,
+      receiverId: receiverId,
+      content: content,
       createdAt: new Date(),
     });
-    res.status(201).json({ message: "Message added successfully", chat });
+
+    return result;
   } catch (error) {
-    res.status(500).json({ error: "Failed to add message" });
+    console.error("Error in addMessage:", error);
+    return error;
   }
 };
 

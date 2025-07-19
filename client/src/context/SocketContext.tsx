@@ -1,5 +1,7 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, useContext, useEffect, useRef } from "react";
-import { useAppStore } from "@/store";
+import { useAppChatStore, useAppStore } from "@/store";
 import { HOST } from "@/utils/constants";
 import { io } from "socket.io-client";
 import { Socket } from "socket.io-client";
@@ -31,6 +33,32 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         console.log("Socket connected:", socket.current?.id);
       });
     }
+
+    const handleReceiveMessage = (message: {
+      senderId: any;
+      recieverId: any;
+      content: string;
+      createdAt: string;
+    }) => {
+      const { selectedChatData, selectedChatType, addMessage } =
+        useAppChatStore();
+
+      if (
+        selectedChatType !== undefined &&
+        (selectedChatData._id === message.senderId ||
+          selectedChatData._id === message.recieverId)
+      ) {
+        addMessage({
+          senderId: message.senderId,
+          receiverId: message.recieverId,
+          content: message.content,
+          createdAt: message.createdAt,
+        });
+        return;
+      }
+    };
+
+    socket.current?.on("recieveMessage", handleReceiveMessage);
 
     return () => {
       socket.current?.disconnect();

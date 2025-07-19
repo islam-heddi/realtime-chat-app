@@ -2,6 +2,7 @@ import { apiClient } from "@/lib/api-client";
 import { useEffect, useState } from "react";
 import { SEARCH_USER } from "@/utils/constants";
 import { useAppStore } from "@/store";
+import { useAppChatStore } from "@/store";
 
 type User = {
   _id: string;
@@ -12,6 +13,7 @@ type User = {
 export default function SearchFriendChannel({ search }: { search: string }) {
   const [users, setUsers] = useState<User[]>([]);
   const { userInfo } = useAppStore();
+  const { setSelectedChatData, setSelectedChatType } = useAppChatStore();
   console.log(userInfo);
   useEffect(() => {
     apiClient
@@ -34,6 +36,13 @@ export default function SearchFriendChannel({ search }: { search: string }) {
               key={index}
               onClick={() => {
                 window.location.href = `/chat/${value._id}`;
+                setSelectedChatType("friend");
+                setSelectedChatData({
+                  senderId: userInfo?._id,
+                  receiverId: value._id,
+                  name: value.name,
+                  email: value.email,
+                });
               }}
             >
               <span className="text-black">{value?.name}</span>{" "}

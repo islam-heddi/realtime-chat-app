@@ -1,5 +1,6 @@
 import { Server } from "http";
 import { Socket, Server as SocketIOServer } from "socket.io";
+import { addMessage } from "./Controller/chat.controller";
 
 const setupSocket = (server: Server) => {
   const io = new SocketIOServer(server, {
@@ -21,6 +22,28 @@ const setupSocket = (server: Server) => {
     }
   };
 
+  const sendMessage = async (message: any) => {
+    const senderSocketId = userSocketMap.get(message.senderId);
+    const receiverSocketId = userSocketMap.get(message.receiverId);
+    if (receiverSocketId == null) {
+      console.log(`Receiver ${message.receiverId} not connected`);
+      return;
+    }
+    if (senderSocketId == null) {
+      console.log(`sender ${message.senderId} not connected`);
+      return;
+    }
+    await addMessage(message.senderId, message.receiverId, message.content);
+    io.to(receiverSocketId).emit("recieveMessage", {
+      senderId: message.senderId,
+      content: message.content,
+    });
+    io.to(senderSocketId).emit("recieveMessage", {
+      senderId: message.senderId,
+      content: message.content,
+    });
+  };
+
   io.on("connection", (socket) => {
     const userId = socket.handshake.query.userId as string;
 
@@ -30,6 +53,12 @@ const setupSocket = (server: Server) => {
     } else {
       console.log("User ID not provided in handshake query");
     }
+
+    socket.on("sendMessage", sendMessage);
+
+    io.on("message", (message) => {
+      console.log(`Message received from user ${userId}:`, message);
+    });
 
     socket.on("disconnect", () => {
       disconnect(socket);

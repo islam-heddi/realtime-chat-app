@@ -39,6 +39,11 @@ export default function ChatPage() {
           type="text"
           value={content}
           onChange={(e) => setContent(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && content.trim() !== "") {
+              setContent("");
+            }
+          }}
           placeholder="Enter a message"
         />
       </div>
