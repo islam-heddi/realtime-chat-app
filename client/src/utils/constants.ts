@@ -5,3 +5,5 @@ export const LOGIN_ROUTE = "/auth/login";
 export const USER_AUTH_ROUTE = "/user";
 export const SIGNOUT_AUTH_ROUTE = "/auth/deconnect";
 export const SEARCH_USER = "/user/search";
+
+export const GET_MESSAGES_ROUTE = "/chat/messages";

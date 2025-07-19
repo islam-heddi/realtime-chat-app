@@ -32,6 +32,9 @@ export default function SearchFriendChannel({ search }: { search: string }) {
             <div
               className="cursor-pointer p-5 m-5 w-full hover:bg-gray-400 hover:shadow-xl/30 hover:shadow-black rounded-2xl"
               key={index}
+              onClick={() => {
+                window.location.href = `/chat/${value._id}`;
+              }}
             >
               <span className="text-black">{value?.name}</span>{" "}
               <span className="text-gray-700"> {value?.email}</span>

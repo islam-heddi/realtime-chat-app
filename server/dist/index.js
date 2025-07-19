@@ -9,7 +9,9 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const socket_1 = __importDefault(require("./socket"));
 const user_routes_1 = __importDefault(require("./routes/user.routes"));
+const chat_routes_1 = __importDefault(require("./routes/chat.routes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 mongoose_1.default
@@ -29,7 +31,9 @@ app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use("/auth", auth_routes_1.default);
 app.use("/", user_routes_1.default);
+app.use("/chat", chat_routes_1.default);
 const server = app.listen(PORT, () => {
     console.log(`the server is listening ${PORT}`);
 });
+(0, socket_1.default)(server);
 module.exports = app;

@@ -4,7 +4,9 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
+import setupSocket from "./socket";
 import user from "./routes/user.routes";
+import chat from "./routes/chat.routes";
 dotenv.config();
 const app = express();
 mongoose
@@ -28,8 +30,11 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/auth", auth);
 app.use("/", user);
+app.use("/chat", chat);
 const server = app.listen(PORT, () => {
   console.log(`the server is listening ${PORT}`);
 });
+
+setupSocket(server);
 
 module.exports = app;
