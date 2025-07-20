@@ -1,20 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { chatSchema, messageType } from "@/Schema/message.type";
 import type { StateCreator } from "zustand";
 
 export interface ChatSlice {
-  selectedChatData:
-    | {
-        _id?: string;
-        senderId?: string;
-        receiverId?: string;
-        name?: string | null;
-        email?: string | null;
-      }
-    | undefined;
+  selectedChatData: chatSchema | undefined;
   selectedChatType: "friend" | "channel" | null | undefined;
-  selectedChatMessage: any[];
-  addMessage: (message: any) => void;
-  setSelectedChatData: (selectedChatData: any) => void;
+  selectedChatMessage: messageType[];
+  addMessage: (message: messageType) => void;
+  setSelectedChatData: (selectedChatData: chatSchema | undefined) => void;
   setSelectedChatType: (
     selectedChatType: "friend" | "channel" | null | undefined
   ) => void;
@@ -46,16 +39,18 @@ export const createChatSlice: StateCreator<ChatSlice> = (set, get) => ({
       selectedChatMessage: [],
     });
   },
-  addMessage: (message: any) => {
+  addMessage: (message: messageType) => {
     const selectedChatMessage = get().selectedChatMessage;
     set({
       selectedChatMessage: [
         ...selectedChatMessage,
         {
-          senderId: message.senderId,
+          _id: message._id,
+          emiterId: message.emiterId,
           receiverId: message.receiverId,
           content: message.content,
           createdAt: message.createdAt,
+          isSeened: message.isSeened,
         },
       ],
     });

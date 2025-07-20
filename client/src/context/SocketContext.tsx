@@ -6,6 +6,8 @@ import { HOST } from "@/utils/constants";
 import { io } from "socket.io-client";
 import { Socket } from "socket.io-client";
 import type { DefaultEventsMap } from "@socket.io/component-emitter";
+import type { messageType } from "@/Schema/message.type";
+import type { User } from "@/store/slice/auth-slice";
 
 const SocketContext = createContext<Socket<
   DefaultEventsMap,
@@ -14,7 +16,15 @@ const SocketContext = createContext<Socket<
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const useSocket = () => {
-  useContext(SocketContext);
+  //useContext(SocketContext);
+  const { userInfo } = useAppStore();
+  console.log(userInfo?._id);
+  return io(HOST, {
+    withCredentials: true,
+    query: {
+      userId: (userInfo as User)._id as string | "",
+    },
+  }) as Socket<DefaultEventsMap, DefaultEventsMap>;
 };
 
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
@@ -45,14 +55,15 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (
         selectedChatType !== undefined &&
-        (selectedChatData._id === message.senderId ||
-          selectedChatData._id === message.recieverId)
+        ((selectedChatData as messageType)._id === message.senderId ||
+          (selectedChatData as messageType)._id === message.recieverId)
       ) {
         addMessage({
-          senderId: message.senderId,
+          emiterId: message.senderId,
           receiverId: message.recieverId,
           content: message.content,
           createdAt: message.createdAt,
+          isSeened: false,
         });
         return;
       }

@@ -25,14 +25,14 @@ const setupSocket = (server: Server) => {
   const sendMessage = async (message: any) => {
     const senderSocketId = userSocketMap.get(message.senderId);
     const receiverSocketId = userSocketMap.get(message.receiverId);
-    if (receiverSocketId == null) {
+    /* if (receiverSocketId == null) {
       console.log(`Receiver ${message.receiverId} not connected`);
       return;
     }
     if (senderSocketId == null) {
       console.log(`sender ${message.senderId} not connected`);
       return;
-    }
+    }*/
     await addMessage(message.senderId, message.receiverId, message.content);
     io.to(receiverSocketId).emit("recieveMessage", {
       senderId: message.senderId,

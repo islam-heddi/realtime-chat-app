@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { SEARCH_USER } from "@/utils/constants";
 import { useAppStore } from "@/store";
 import { useAppChatStore } from "@/store";
-
+import { useNavigate } from "react-router-dom";
 type User = {
   _id: string;
   name: string;
@@ -11,10 +11,10 @@ type User = {
 };
 
 export default function SearchFriendChannel({ search }: { search: string }) {
+  const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
   const { userInfo } = useAppStore();
   const { setSelectedChatData, setSelectedChatType } = useAppChatStore();
-  console.log(userInfo);
   useEffect(() => {
     apiClient
       .post(SEARCH_USER, { name: search })
@@ -24,6 +24,17 @@ export default function SearchFriendChannel({ search }: { search: string }) {
       })
       .catch((err) => console.log(err));
   }, [search]);
+
+  const handleSelectUser = (value: User, type: "friend" | "channel") => {
+    setSelectedChatType(type);
+    setSelectedChatData({
+      senderId: userInfo?._id,
+      receiverId: value._id,
+      name: value.name,
+      email: value.email,
+    });
+    navigate(`/chat`);
+  };
   return (
     <div>
       <p>Search for "{search}" Friend or Channel</p>
@@ -34,16 +45,7 @@ export default function SearchFriendChannel({ search }: { search: string }) {
             <div
               className="cursor-pointer p-5 m-5 w-full hover:bg-gray-400 hover:shadow-xl/30 hover:shadow-black rounded-2xl"
               key={index}
-              onClick={() => {
-                window.location.href = `/chat/${value._id}`;
-                setSelectedChatType("friend");
-                setSelectedChatData({
-                  senderId: userInfo?._id,
-                  receiverId: value._id,
-                  name: value.name,
-                  email: value.email,
-                });
-              }}
+              onClick={() => handleSelectUser(value, "friend")}
             >
               <span className="text-black">{value?.name}</span>{" "}
               <span className="text-gray-700"> {value?.email}</span>
