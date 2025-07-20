@@ -5,33 +5,19 @@ import { useNavigate } from "react-router-dom";
 
 import { useAppChatStore } from "@/store/index";
 import { useSocket } from "@/context/SocketContext";
-import { apiClient } from "@/lib/api-client";
+import { Button } from "@/components/ui/button";
 
 export default function ChatPageFr() {
   const navigate = useNavigate();
   const [content, setContent] = useState("");
   const { userInfo } = useAppStore();
-  const { selectedChatData, selectedChatMessage, setSelectedChatMessage } =
-    useAppChatStore();
+  const { selectedChatData, selectedChatMessage } = useAppChatStore();
   const socket = useSocket();
-  //console.log("Socket in ChatPageFr:", socket);
-  console.log(selectedChatMessage);
   useEffect(() => {
     if (userInfo == null) {
       navigate("/");
     }
-    apiClient
-      .get(`/chat/messages/${selectedChatData?.receiverId}`, {
-        withCredentials: true,
-      })
-      .then((response) => {
-        console.log(response.data.messages);
-        setSelectedChatMessage(response.data.messages);
-      })
-      .catch((error) => {
-        console.error("Error fetching messages:", error);
-      });
-  }, [userInfo, navigate, selectedChatData, apiClient, setSelectedChatMessage]);
+  }, [userInfo, navigate]);
 
   const handleSendMessage = () => {
     const msgContent = content;
@@ -79,6 +65,7 @@ export default function ChatPageFr() {
           }}
           placeholder="Enter a message"
         />
+        <Button onClick={() => handleSendMessage()}>Send</Button>
       </div>
     </div>
   );

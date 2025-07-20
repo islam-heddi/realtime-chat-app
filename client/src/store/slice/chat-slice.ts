@@ -24,13 +24,8 @@ export const createChatSlice: StateCreator<ChatSlice> = (set, get) => ({
   setSelectedChatType: (selectedChatType: any) => {
     set({ selectedChatType });
   },
-  setSelectedChatMessage: (
-    selectedChatMessage:
-      | ChatSlice
-      | Partial<ChatSlice>
-      | ((state: ChatSlice) => ChatSlice | Partial<ChatSlice>)
-  ) => {
-    return set(selectedChatMessage);
+  setSelectedChatMessage: (selectedChatMessage: messageType[]) => {
+    set({ selectedChatMessage });
   },
   closeChat: () => {
     set({

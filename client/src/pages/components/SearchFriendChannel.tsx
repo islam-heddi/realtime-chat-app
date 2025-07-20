@@ -14,7 +14,8 @@ export default function SearchFriendChannel({ search }: { search: string }) {
   const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
   const { userInfo } = useAppStore();
-  const { setSelectedChatData, setSelectedChatType } = useAppChatStore();
+  const { setSelectedChatData, setSelectedChatType, setSelectedChatMessage } =
+    useAppChatStore();
   useEffect(() => {
     apiClient
       .post(SEARCH_USER, { name: search })
@@ -26,6 +27,16 @@ export default function SearchFriendChannel({ search }: { search: string }) {
   }, [search]);
 
   const handleSelectUser = (value: User, type: "friend" | "channel") => {
+    apiClient
+      .get(`/chat/messages/${value._id}`, {
+        withCredentials: true,
+      })
+      .then((response) => {
+        setSelectedChatMessage(response.data.messages);
+      })
+      .catch((error) => {
+        console.error("Error fetching messages:", error);
+      });
     setSelectedChatType(type);
     setSelectedChatData({
       senderId: userInfo?._id,
