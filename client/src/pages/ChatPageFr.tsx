@@ -5,19 +5,33 @@ import { useNavigate } from "react-router-dom";
 
 import { useAppChatStore } from "@/store/index";
 import { useSocket } from "@/context/SocketContext";
+import { apiClient } from "@/lib/api-client";
 
 export default function ChatPageFr() {
   const navigate = useNavigate();
   const [content, setContent] = useState("");
   const { userInfo } = useAppStore();
-  const { selectedChatData } = useAppChatStore();
+  const { selectedChatData, selectedChatMessage, setSelectedChatMessage } =
+    useAppChatStore();
   const socket = useSocket();
-  console.log("Socket in ChatPageFr:", socket);
+  //console.log("Socket in ChatPageFr:", socket);
+  console.log(selectedChatMessage);
   useEffect(() => {
     if (userInfo == null) {
       navigate("/");
     }
-  }, [userInfo, navigate, selectedChatData]);
+    apiClient
+      .get(`/chat/messages/${selectedChatData?.receiverId}`, {
+        withCredentials: true,
+      })
+      .then((response) => {
+        console.log(response.data.messages);
+        setSelectedChatMessage(response.data.messages);
+      })
+      .catch((error) => {
+        console.error("Error fetching messages:", error);
+      });
+  }, [userInfo, navigate, selectedChatData, apiClient, setSelectedChatMessage]);
 
   const handleSendMessage = () => {
     const msgContent = content;
@@ -37,6 +51,23 @@ export default function ChatPageFr() {
         <h1 className="text-2xl font-bold mb-4">
           Chat with {selectedChatData?.name}
         </h1>
+        <div>
+          {selectedChatMessage.map((value, index) => (
+            <div
+              key={index}
+              className={`mb-2 p-2 rounded-lg ${
+                value.emiterId == userInfo?._id
+                  ? "bg-blue-100 text-right"
+                  : "bg-gray-100 text-left"
+              }`}
+            >
+              <p>{value.content}</p>
+              <span className="text-xs text-gray-500">
+                {value.createdAt as string}
+              </span>
+            </div>
+          ))}
+        </div>
         <Input
           type="text"
           value={content}

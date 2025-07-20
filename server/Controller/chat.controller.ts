@@ -36,12 +36,29 @@ export const getMessages = async (req: Request, res: Response) => {
     if (!existingUser) {
       return res.status(404).json({ error: "Receiver not found" });
     }
-    const messages = await Chat.find({ receiverId, emiterId: id }).sort({
+    const messages = await Chat.find({
+      receiverId,
+      emiterId: id,
+    }).sort({
       createdAt: -1,
     });
 
+    const messag = await Chat.find({
+      receiverId: id,
+      emiterId: receiverId,
+    }).sort({
+      createdAt: -1,
+    });
+
+    const temp = messages.concat(messag).sort((a, b) => {
+      return (
+        (a.createdAt as NativeDate).getTime() -
+        (b.createdAt as NativeDate).getTime()
+      );
+    });
+
     return res.status(200).json({
-      messages: messages,
+      messages: temp,
       receiver: {
         id: existingUser._id,
         name: existingUser.name,
