@@ -8,6 +8,7 @@ import setupSocket from "./socket";
 import user from "./routes/user.routes";
 import chat from "./routes/chat.routes";
 import friend from "./routes/friend.routes";
+import channel from "./routes/channels.routes";
 dotenv.config();
 const app = express();
 mongoose
@@ -33,6 +34,7 @@ app.use("/auth", auth);
 app.use("/", user);
 app.use("/chat", chat);
 app.use("/friends", friend);
+app.use("/channels", channel);
 const server = app.listen(PORT, () => {
   console.log(`the server is listening ${PORT}`);
 });

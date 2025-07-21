@@ -13,6 +13,7 @@ const socket_1 = __importDefault(require("./socket"));
 const user_routes_1 = __importDefault(require("./routes/user.routes"));
 const chat_routes_1 = __importDefault(require("./routes/chat.routes"));
 const friend_routes_1 = __importDefault(require("./routes/friend.routes"));
+const channels_routes_1 = __importDefault(require("./routes/channels.routes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 mongoose_1.default
@@ -34,6 +35,7 @@ app.use("/auth", auth_routes_1.default);
 app.use("/", user_routes_1.default);
 app.use("/chat", chat_routes_1.default);
 app.use("/friends", friend_routes_1.default);
+app.use("/channels", channels_routes_1.default);
 const server = app.listen(PORT, () => {
     console.log(`the server is listening ${PORT}`);
 });
