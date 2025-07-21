@@ -4,6 +4,7 @@ import { SEARCH_USER } from "@/utils/constants";
 import { useAppStore } from "@/store";
 import { useAppChatStore } from "@/store";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 type User = {
   _id: string;
   name: string;
@@ -45,6 +46,7 @@ export default function SearchFriendChannel({ search }: { search: string }) {
     });
     navigate(`/chat`);
   };
+  const handleAddFriend = (value: User) => {};
   return (
     <div>
       <p>Search for "{search}" Friend or Channel</p>
@@ -59,6 +61,7 @@ export default function SearchFriendChannel({ search }: { search: string }) {
             >
               <span className="text-black">{value?.name}</span>{" "}
               <span className="text-gray-700"> {value?.email}</span>
+              <Button onClick={() => handleAddFriend(value)}>+</Button>
             </div>
           ))}
       </div>

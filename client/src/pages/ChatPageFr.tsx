@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useAppStore } from "@/store";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +19,11 @@ export default function ChatPageFr() {
       navigate("/");
     }
   }, [userInfo, navigate]);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [selectedChatMessage]);
 
   socket.on("recieveMessage", (message) => {
     addMessage({
@@ -64,6 +69,7 @@ export default function ChatPageFr() {
               </span>
             </div>
           ))}
+          <div ref={bottomRef} />
         </div>
         <div className="flex flex-row items-center justify-between m-4 gap-4">
           <Input
