@@ -1,8 +1,8 @@
 import { Router } from "express";
 import {
   sendFriendRequest,
-  applyFriendRequest,
   getFriendsRequests,
+  applyRequest,
 } from "../Controller/friends.controller";
 import { verifyToken } from "../Middleware/jwt.verify";
 
@@ -10,6 +10,6 @@ const route = Router();
 
 route.get("/", verifyToken, getFriendsRequests);
 route.post("/send", verifyToken, sendFriendRequest);
-route.post("/apply", verifyToken, applyFriendRequest);
+route.patch("/apply", verifyToken, applyRequest);
 
 export default route;

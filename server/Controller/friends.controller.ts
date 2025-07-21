@@ -35,6 +35,32 @@ export const sendFriendRequest = async (req: Request, res: Response) => {
   }
 };
 
+export const applyRequest = async (req: Request, res: Response) => {
+  const { id, status } = req.body;
+  try {
+    const existingRequest = await Friend.findOne({
+      _id: id,
+    });
+
+    if (!existingRequest) {
+      return res.status(404).send("Friend request not found");
+    }
+
+    if (status !== "accepted" && status !== "rejected") {
+      return res.status(400).send("Invalid status");
+    }
+
+    const result = await Friend.updateOne(
+      { _id: existingRequest?._id },
+      { status }
+    );
+
+    return res.status(200).send(result);
+  } catch (error) {
+    return res.status(500).send(`error: ${error}`);
+  }
+};
+
 export const applyFriendRequest = async (req: Request, res: Response) => {
   const id = req.user;
   const { friendId, status } = req.body;
@@ -84,7 +110,37 @@ export const getFriendsRequests = async (req: Request, res: Response) => {
       userId: user._id,
     });
 
-    return res.status(200).send(requests);
+    const myRequests = await Promise.all(
+      requests.map(async (request) => {
+        const friend = await User.findById(request.friendId);
+        return {
+          ...request.toObject(),
+          friendName: friend?.name,
+          friendEmail: friend?.email,
+          userName: user.name,
+          userEmail: user.email,
+        };
+      })
+    );
+
+    const FriendRequest = await Friend.find({
+      friendId: user._id,
+    });
+
+    const myFriendsRequests = await Promise.all(
+      FriendRequest.map(async (request) => {
+        const friend = await User.findById(request.userId);
+        return {
+          ...request.toObject(),
+          friendName: user.name,
+          friendEmail: user.email,
+          userName: friend?.name,
+          userEmail: friend?.name,
+        };
+      })
+    );
+
+    return res.status(200).send(myRequests.concat(myFriendsRequests));
   } catch (error) {
     return res.status(500).send(`error: ${error}`);
   }

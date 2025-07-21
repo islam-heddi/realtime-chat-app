@@ -3,8 +3,8 @@ import { apiClient } from "@/lib/api-client";
 import { useNavigate } from "react-router-dom";
 import { useAppStore } from "@/store";
 import { Button } from "@/components/ui/button";
-
-export default function Dashboard() {
+import FriendRequestComponent from "./components/FriendRequestComponent";
+export default function FriendRequestPage() {
   const { userInfo, setUserInfo } = useAppStore();
   const navigate = useNavigate();
 
@@ -32,6 +32,7 @@ export default function Dashboard() {
             <Button onClick={() => navigate("/dashboard")}>Dashboard</Button>
           </div>
           <div>{userInfo.name} Dashboard</div>
+          <FriendRequestComponent />
         </div>
       )}
     </div>

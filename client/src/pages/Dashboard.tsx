@@ -39,6 +39,12 @@ export default function Dashboard() {
             <Button>+ New Friend</Button>
           </div>
           <div>{userInfo.name} Dashboard</div>
+          <div
+            className="cursor-pointer inline text-green-500"
+            onClick={() => navigate("/friendRequest")}
+          >
+            Friend Requests
+          </div>
           <div className="p-7">
             <div className="border-2 flex flex-row items-center justify-center">
               <Input
