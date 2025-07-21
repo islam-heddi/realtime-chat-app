@@ -9,4 +9,6 @@ export const SEARCH_USER = "/user/search";
 export const GET_FRIENDS_ROUTE = "/friends";
 export const SEND_FRIEND_REQUEST_ROUTE = "/friends/send";
 export const APPLY_FRIEND_REQUEST_ROUTE = "/friends/apply";
+export const GET_MY_FRIENDS = "/friends/myFriends";
+
 export const GET_MESSAGES_ROUTE = "/chat/messages/";

@@ -145,3 +145,44 @@ export const getFriendsRequests = async (req: Request, res: Response) => {
     return res.status(500).send(`error: ${error}`);
   }
 };
+
+export const getFriends = async (req: Request, res: Response) => {
+  const id = req.user;
+  try {
+    const friends = await Friend.find({
+      userId: id?.id,
+      status: "accepted",
+    });
+
+    const myFriends = await Promise.all(
+      friends.map(async (request) => {
+        const friend = await User.findById(request.friendId);
+        return {
+          ...request.toObject(),
+          friendName: friend?.name,
+          friendEmail: friend?.email,
+        };
+      })
+    );
+
+    const FriendRequest = await Friend.find({
+      friendId: id?.id,
+      status: "accepted",
+    });
+
+    const myFriendsRequests = await Promise.all(
+      FriendRequest.map(async (request) => {
+        const friend = await User.findById(request.userId);
+        return {
+          ...request.toObject(),
+          friendName: friend?.name,
+          friendEmail: friend?.email,
+        };
+      })
+    );
+
+    return res.status(200).send(myFriends.concat(myFriendsRequests));
+  } catch (error) {
+    return res.status(500).send(`error: ${error}`);
+  }
+};
