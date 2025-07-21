@@ -21,7 +21,6 @@ export default function SearchFriendChannel({ search }: { search: string }) {
       .post(SEARCH_USER, { name: search })
       .then((res) => {
         setUsers(res.data);
-        console.log(res);
       })
       .catch((err) => console.log(err));
   }, [search]);

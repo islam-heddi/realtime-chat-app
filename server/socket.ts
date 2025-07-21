@@ -22,25 +22,28 @@ const setupSocket = (server: Server) => {
     }
   };
 
-  const sendMessage = async (message: any) => {
+  const sendMessage = async (message: any, socket: any) => {
     const senderSocketId = userSocketMap.get(message.senderId);
     const receiverSocketId = userSocketMap.get(message.receiverId);
-    /* if (receiverSocketId == null) {
-      console.log(`Receiver ${message.receiverId} not connected`);
-      return;
-    }
-    if (senderSocketId == null) {
-      console.log(`sender ${message.senderId} not connected`);
-      return;
-    }*/
+
     await addMessage(message.senderId, message.receiverId, message.content);
-    io.to(receiverSocketId).emit("recieveMessage", {
+    socket.to(receiverSocketId).emit("recieveMessage", {
       senderId: message.senderId,
       content: message.content,
+      receiverId: message.receiverId,
+      createdAt: message.createdAt,
     });
-    io.to(senderSocketId).emit("recieveMessage", {
+    socket.to(senderSocketId).emit("recieveMessage", {
       senderId: message.senderId,
       content: message.content,
+      receiverId: message.receiverId,
+      createdAt: message.createdAt,
+    });
+    socket.emit("recieveMessage", {
+      senderId: message.senderId,
+      content: message.content,
+      receiverId: message.receiverId,
+      createdAt: message.createdAt,
     });
   };
 
@@ -54,7 +57,9 @@ const setupSocket = (server: Server) => {
       console.log("User ID not provided in handshake query");
     }
 
-    socket.on("sendMessage", sendMessage);
+    socket.setMaxListeners(10);
+
+    socket.on("sendMessage", (message: any) => sendMessage(message, socket));
 
     io.on("message", (message) => {
       console.log(`Message received from user ${userId}:`, message);

@@ -1,12 +1,11 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createContext, useContext, useEffect, useRef } from "react";
+import { createContext, useEffect, useRef } from "react";
 import { useAppChatStore, useAppStore } from "@/store";
 import { HOST } from "@/utils/constants";
 import { io } from "socket.io-client";
 import { Socket } from "socket.io-client";
 import type { DefaultEventsMap } from "@socket.io/component-emitter";
-import type { messageType } from "@/Schema/message.type";
 import type { User } from "@/store/slice/auth-slice";
 
 const SocketContext = createContext<Socket<
@@ -18,7 +17,6 @@ const SocketContext = createContext<Socket<
 export const useSocket = () => {
   //useContext(SocketContext);
   const { userInfo } = useAppStore();
-  console.log(userInfo?._id);
   return io(HOST, {
     withCredentials: true,
     query: {
@@ -50,26 +48,21 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       content: string;
       createdAt: string;
     }) => {
-      const { selectedChatData, selectedChatType, addMessage } =
-        useAppChatStore();
+      console.log("Received message:", message);
+      const { addMessage } = useAppChatStore();
 
-      if (
-        selectedChatType !== undefined &&
-        ((selectedChatData as messageType)._id === message.senderId ||
-          (selectedChatData as messageType)._id === message.recieverId)
-      ) {
-        addMessage({
-          emiterId: message.senderId,
-          receiverId: message.recieverId,
-          content: message.content,
-          createdAt: message.createdAt,
-          isSeened: false,
-        });
-        return;
-      }
+      addMessage({
+        emiterId: message.senderId,
+        receiverId: message.recieverId,
+        content: message.content,
+        createdAt: message.createdAt,
+        isSeened: false,
+      });
     };
 
-    socket.current?.on("recieveMessage", handleReceiveMessage);
+    socket.current?.on("recieveMessage", (message) =>
+      handleReceiveMessage(message)
+    );
 
     return () => {
       socket.current?.disconnect();

@@ -11,7 +11,8 @@ export default function ChatPageFr() {
   const navigate = useNavigate();
   const [content, setContent] = useState("");
   const { userInfo } = useAppStore();
-  const { selectedChatData, selectedChatMessage } = useAppChatStore();
+  const { selectedChatData, selectedChatMessage, addMessage } =
+    useAppChatStore();
   const socket = useSocket();
   useEffect(() => {
     if (userInfo == null) {
@@ -19,9 +20,19 @@ export default function ChatPageFr() {
     }
   }, [userInfo, navigate]);
 
+  socket.on("recieveMessage", (message) => {
+    addMessage({
+      emiterId: message.senderId,
+      receiverId: message.recieverId,
+      content: message.content,
+      createdAt: message.createdAt,
+      isSeened: false,
+    });
+  });
+
   const handleSendMessage = () => {
+    if (content == "") return;
     const msgContent = content;
-    console.log("Sending message:", msgContent);
     setContent("");
     socket.emit("sendMessage", {
       senderId: userInfo?._id,
@@ -32,16 +43,16 @@ export default function ChatPageFr() {
   };
 
   return (
-    <div className="h-[100vh] w-[100vw] max-[833px]:w-full max-[833px]:h-full inline-flex items-center justify-center bg-[#deffff] p-6 rounded-2xl ">
-      <div className="bg-white p-6 rounded-2xl shadow-black w-1/2 shadow-xl/30 max-[833px]:w-full">
+    <div className="h-[100vh] w-[100vw] max-[833px]:w-full inline-flex items-center justify-center bg-[#deffff] p-6 rounded-2xl ">
+      <div className="bg-white p-6 rounded-2xl shadow-black w-1/2 h-full shadow-xl/30 max-[833px]:w-full">
         <h1 className="text-2xl font-bold mb-4">
           Chat with {selectedChatData?.name}
         </h1>
-        <div>
+        <div className="h-[80%] overflow-y-auto border-2 border-gray-950">
           {selectedChatMessage.map((value, index) => (
             <div
               key={index}
-              className={`mb-2 p-2 rounded-lg ${
+              className={`m-3.5 mb-2 p-2 rounded-lg ${
                 value.emiterId == userInfo?._id
                   ? "bg-blue-100 text-right"
                   : "bg-gray-100 text-left"
@@ -54,18 +65,20 @@ export default function ChatPageFr() {
             </div>
           ))}
         </div>
-        <Input
-          type="text"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && content.trim() !== "") {
-              handleSendMessage();
-            }
-          }}
-          placeholder="Enter a message"
-        />
-        <Button onClick={() => handleSendMessage()}>Send</Button>
+        <div className="flex flex-row items-center justify-between m-4 gap-4">
+          <Input
+            type="text"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && content.trim() !== "") {
+                handleSendMessage();
+              }
+            }}
+            placeholder="Enter a message"
+          />
+          <Button onClick={() => handleSendMessage()}>Send</Button>
+        </div>
       </div>
     </div>
   );

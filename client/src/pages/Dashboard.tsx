@@ -38,6 +38,7 @@ export default function Dashboard() {
             <Button>+ New Channel</Button>
             <Button>+ New Friend</Button>
           </div>
+          <div>{userInfo.name} Dashboard</div>
           <div className="p-7">
             <div className="border-2 flex flex-row items-center justify-center">
               <Input
