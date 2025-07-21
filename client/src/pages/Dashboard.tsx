@@ -35,7 +35,9 @@ export default function Dashboard() {
             >
               Sign Out
             </p>
-            <Button>+ New Channel</Button>
+            <Button onClick={() => navigate("/channel/new")}>
+              + New Channel
+            </Button>
             <div
               className="cursor-pointer inline text-green-500"
               onClick={() => navigate("/friendRequest")}
