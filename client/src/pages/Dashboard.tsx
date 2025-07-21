@@ -36,15 +36,14 @@ export default function Dashboard() {
               Sign Out
             </p>
             <Button>+ New Channel</Button>
-            <Button>+ New Friend</Button>
+            <div
+              className="cursor-pointer inline text-green-500"
+              onClick={() => navigate("/friendRequest")}
+            >
+              Friend Requests
+            </div>
           </div>
           <div>{userInfo.name} Dashboard</div>
-          <div
-            className="cursor-pointer inline text-green-500"
-            onClick={() => navigate("/friendRequest")}
-          >
-            Friend Requests
-          </div>
           <div className="p-7">
             <div className="border-2 flex flex-row items-center justify-center">
               <Input
