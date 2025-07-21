@@ -1,5 +1,6 @@
 import { Tabs, TabsTrigger, TabsContent, TabsList } from "@/components/ui/tabs";
 import MyFriends from "./MyFriends";
+import GetChannels from "./GetChannels";
 
 export default function FriendChannelList() {
   return (
@@ -12,7 +13,9 @@ export default function FriendChannelList() {
         <TabsContent value="friends">
           <MyFriends />
         </TabsContent>
-        <TabsContent value="channels">No available channels</TabsContent>
+        <TabsContent value="channels">
+          <GetChannels />
+        </TabsContent>
       </Tabs>
     </div>
   );

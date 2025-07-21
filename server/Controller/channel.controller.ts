@@ -35,3 +35,17 @@ export const getChannels = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to retrieve messages" });
   }
 };
+
+export const getMyChannels = async (req: Request, res: Response) => {
+  const id = req.user;
+
+  try {
+    const result = await Channel.find({
+      creatorId: id?.id,
+    });
+
+    return res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve messages" });
+  }
+};
