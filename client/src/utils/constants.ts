@@ -16,3 +16,5 @@ export const CREATE_CHANNELS_ROUTE = "/channels/create";
 export const GET_MY_CHANNELS_ROUTE = "/channels/getMyChannels";
 
 export const GET_MESSAGES_ROUTE = "/chat/messages/";
+
+export const SEARCH_CHANNEL = "/channels/get";
