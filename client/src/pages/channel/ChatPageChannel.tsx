@@ -29,9 +29,10 @@ export default function ChatPageFr() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [selectedChannelMessages]);
 
-  socket.on("recieveMessage", (message) => {
+  socket.on("recieve-message-channel", (message) => {
     addMessage({
       emiterId: message.senderId,
+      emiterName: message.emiterName,
       receiverId: message.recieverId,
       content: message.content,
       createdAt: message.createdAt,
@@ -43,11 +44,10 @@ export default function ChatPageFr() {
     if (content == "") return;
     const msgContent = content;
     setContent("");
-    socket.emit("sendMessage", {
+    socket.emit("send-message-channel", {
       senderId: userInfo?._id,
       receiverId: selectedChannelId,
       content: msgContent,
-      createdAt: new Date().toISOString(),
     });
   };
 

@@ -1,6 +1,7 @@
 import { Server } from "http";
 import { Socket, Server as SocketIOServer } from "socket.io";
 import { addMessage } from "./Controller/chat.controller";
+import { sendMessageChannel } from "./Controller/channel.controller";
 
 const setupSocket = (server: Server) => {
   const io = new SocketIOServer(server, {
@@ -47,6 +48,25 @@ const setupSocket = (server: Server) => {
     });
   };
 
+  const sendMessageRoom = async (message: any, socket: any) => {
+    const senderSocketId = userSocketMap.get(message.senderId);
+
+    const createMessage = await sendMessageChannel({
+      senderId: message.senderId,
+      content: message.content,
+      channelId: message.receiverId,
+    });
+
+    socket.to(senderSocketId).emit("recieve-message-channel", {
+      isSeened: false,
+      emiterId: message.senderId,
+      emiterName: createMessage?.senderName,
+      channelId: message.receiverId,
+      createdAt: createMessage?.createdAt,
+      content: message.content,
+    });
+  };
+
   io.on("connection", (socket) => {
     const userId = socket.handshake.query.userId as string;
 
@@ -57,9 +77,13 @@ const setupSocket = (server: Server) => {
       console.log("User ID not provided in handshake query");
     }
 
-    socket.setMaxListeners(10);
+    socket.setMaxListeners(100);
 
     socket.on("sendMessage", (message: any) => sendMessage(message, socket));
+
+    socket.on("send-message-channel", (message: any) =>
+      sendMessageRoom(message, socket)
+    );
 
     io.on("message", (message) => {
       console.log(`Message received from user ${userId}:`, message);
