@@ -5,6 +5,7 @@ import ChatPage from "./pages/ChatPage";
 import ChatPageFr from "./pages/ChatPageFr";
 import FriendRequestPage from "./pages/FriendsRequests";
 import NewChannelPage from "./pages/channel/NewChannelPage";
+import ChannelChatPage from "./pages/channel/ChatPageChannel";
 import { SocketProvider } from "./context/SocketContext";
 import { Toaster } from "sonner";
 
@@ -19,6 +20,7 @@ function App() {
           <Route path="/chat/" element={<ChatPageFr />} />
           <Route path="/friendRequest/" element={<FriendRequestPage />} />
           <Route path="/channel/new" element={<NewChannelPage />} />
+          <Route path="/channel/chat" element={<ChannelChatPage />} />
         </Routes>
       </BrowserRouter>
       <Toaster position="top-right" />

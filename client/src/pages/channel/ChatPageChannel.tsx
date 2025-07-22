@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { useAppStore } from "@/store";
 import { useNavigate } from "react-router-dom";
 
-import { useAppChatStore } from "@/store/index";
+import { useAppChannelStore } from "@/store/index";
 import { useSocket } from "@/context/SocketContext";
 import { Button } from "@/components/ui/button";
 
@@ -11,8 +11,12 @@ export default function ChatPageFr() {
   const navigate = useNavigate();
   const [content, setContent] = useState("");
   const { userInfo } = useAppStore();
-  const { selectedChatData, selectedChatMessage, addMessage } =
-    useAppChatStore();
+  const {
+    selectedChannelId,
+    selectedChannelName,
+    selectedChannelMessages,
+    addMessage,
+  } = useAppChannelStore();
   const socket = useSocket();
   useEffect(() => {
     if (userInfo == null) {
@@ -23,7 +27,7 @@ export default function ChatPageFr() {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [selectedChatMessage]);
+  }, [selectedChannelMessages]);
 
   socket.on("recieveMessage", (message) => {
     addMessage({
@@ -41,7 +45,7 @@ export default function ChatPageFr() {
     setContent("");
     socket.emit("sendMessage", {
       senderId: userInfo?._id,
-      receiverId: selectedChatData?.receiverId,
+      receiverId: selectedChannelId,
       content: msgContent,
       createdAt: new Date().toISOString(),
     });
@@ -51,10 +55,10 @@ export default function ChatPageFr() {
     <div className="h-[100vh] w-[100vw] max-[833px]:w-full inline-flex items-center justify-center bg-[#deffff] p-6 rounded-2xl ">
       <div className="bg-white p-6 rounded-2xl shadow-black w-1/2 h-full shadow-xl/30 max-[833px]:w-full">
         <h1 className="text-2xl font-bold mb-4">
-          Chat with {selectedChatData?.name}
+          Chat in {selectedChannelName} Channel
         </h1>
         <div className="h-[80%] overflow-y-auto border-2 border-gray-950">
-          {selectedChatMessage.map((value, index) => (
+          {selectedChannelMessages.map((value, index) => (
             <div
               key={index}
               className={`m-3.5 mb-2 p-2 rounded-lg ${
@@ -63,6 +67,7 @@ export default function ChatPageFr() {
                   : "bg-gray-100 text-left"
               }`}
             >
+              <p>{value.emiterName}</p>
               <p>{value.content}</p>
               <span className="text-xs text-gray-500">
                 {value.createdAt as string}
