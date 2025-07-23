@@ -2,7 +2,6 @@ import type { Request, Response } from "express";
 import { Channel } from "../Model/Channel.model";
 import { Chat } from "../Model/Chat.model";
 import { User } from "../Model/Users.model";
-import { read } from "fs";
 export const createChannel = async (req: Request, res: Response) => {
   const id = req.user;
   const { name, description } = req.body;
@@ -64,8 +63,13 @@ export const getChannelMessages = async (req: Request, res: Response) => {
         const user = await User.findById(value.emiterId);
 
         return {
-          ...value,
-          emiterName: user?.name,
+          _id: value._id,
+          senderId: value.emiterId || "",
+          senderName: user?.name || "",
+          receiverId: value.receiverId,
+          content: value.content,
+          createdAt: value.createdAt,
+          isSeened: value.isSeened,
         };
       })
     );
@@ -86,7 +90,7 @@ export const sendMessageChannel = async (message: any) => {
     const user = await User.findOne({ senderId });
 
     const createChat = await Chat.create({
-      senderId,
+      emiterId: senderId,
       receiverId: channelId,
       content,
       createdAt: new Date(),

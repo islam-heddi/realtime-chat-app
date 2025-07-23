@@ -59,19 +59,26 @@ export default function ChatPageFr() {
         </h1>
         <div className="h-[80%] overflow-y-auto border-2 border-gray-950">
           {selectedChannelMessages.map((value, index) => (
-            <div
-              key={index}
-              className={`m-3.5 mb-2 p-2 rounded-lg ${
-                value.emiterId == userInfo?._id
-                  ? "bg-blue-100 text-right"
-                  : "bg-gray-100 text-left"
-              }`}
-            >
-              <p>{value.emiterName}</p>
-              <p>{value.content}</p>
-              <span className="text-xs text-gray-500">
-                {value.createdAt as string}
-              </span>
+            <div key={index}>
+              <p
+                className={`ml-3 mr-3 ${
+                  value.senderId == userInfo?._id ? "text-right" : "text-left"
+                }`}
+              >
+                {value.senderId == userInfo?._id ? "You" : value.senderName}
+              </p>
+              <div
+                className={`m-3.5 mb-2 p-2 rounded-lg ${
+                  value.senderId == userInfo?._id
+                    ? "bg-blue-100 text-right"
+                    : "bg-gray-100 text-left"
+                }`}
+              >
+                <p>{value.content}</p>
+                <span className="text-xs text-gray-500">
+                  {value.createdAt as string}
+                </span>
+              </div>
             </div>
           ))}
           <div ref={bottomRef} />

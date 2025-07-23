@@ -6,6 +6,8 @@ export type messageType = {
   emiterName?: string | null | undefined;
   createdAt?: Date | string | null | undefined;
   content?: string | null | undefined;
+  senderId?: string | null | undefined;
+  senderName?: string | null | undefined;
 };
 
 export type chatSchema = {

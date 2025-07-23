@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import type { ChannelSchema } from "@/Schema/channel.type";
+import { getMessagesChannels } from "@/utils/functions";
 type User = {
   _id: string;
   name: string;
@@ -24,7 +25,11 @@ export default function SearchFriendChannel({ search }: { search: string }) {
   const { userInfo } = useAppStore();
   const { setSelectedChatData, setSelectedChatType, setSelectedChatMessage } =
     useAppChatStore();
-  const { setSelectedChannelId, setSelectedChannelName } = useAppChannelStore();
+  const {
+    setSelectedChannelId,
+    setSelectedChannelName,
+    setSelectedChannelMessages,
+  } = useAppChannelStore();
   useEffect(() => {
     apiClient
       .post(SEARCH_USER, { name: search })
@@ -73,9 +78,11 @@ export default function SearchFriendChannel({ search }: { search: string }) {
         toast.error("Failed to send friend request.");
       });
   };
-  const handleSelectChannel = (value: ChannelSchema) => {
+  const handleSelectChannel = async (value: ChannelSchema) => {
     setSelectedChannelId(value._id);
     setSelectedChannelName(value.name);
+    const PrevMsg = await getMessagesChannels(value._id);
+    setSelectedChannelMessages(PrevMsg);
     navigate("/channel/chat");
   };
   return (

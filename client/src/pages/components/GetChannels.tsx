@@ -4,10 +4,15 @@ import { GET_MY_CHANNELS_ROUTE } from "@/utils/constants";
 import { useEffect, useState } from "react";
 import { useAppChannelStore } from "@/store";
 import { useNavigate } from "react-router-dom";
+import { getMessagesChannels } from "@/utils/functions";
 export default function GetChannels() {
   const navigate = useNavigate();
   const [myChannels, setMyChannels] = useState<ChannelSchema[]>([]);
-  const { setSelectedChannelId, setSelectedChannelName } = useAppChannelStore();
+  const {
+    setSelectedChannelId,
+    setSelectedChannelName,
+    setSelectedChannelMessages,
+  } = useAppChannelStore();
 
   useEffect(() => {
     apiClient
@@ -21,6 +26,8 @@ export default function GetChannels() {
   const handleChannel = async (value: ChannelSchema) => {
     setSelectedChannelId(value._id);
     setSelectedChannelName(value.name);
+    const PrevMsg = await getMessagesChannels(value._id);
+    setSelectedChannelMessages(PrevMsg);
     navigate("/channel/chat");
   };
 

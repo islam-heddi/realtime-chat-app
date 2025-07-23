@@ -14,6 +14,7 @@ export const GET_MY_FRIENDS = "/friends/myFriends";
 export const GET_CHANNELS_ROUTE = "/channels/get";
 export const CREATE_CHANNELS_ROUTE = "/channels/create";
 export const GET_MY_CHANNELS_ROUTE = "/channels/getMyChannels";
+export const GET_MESSAGES_CHANNEL = "/channels/getMessages/";
 
 export const GET_MESSAGES_ROUTE = "/chat/messages/";
 
