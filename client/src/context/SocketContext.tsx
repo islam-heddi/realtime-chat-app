@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, useEffect, useRef } from "react";
@@ -7,13 +8,13 @@ import { io } from "socket.io-client";
 import { Socket } from "socket.io-client";
 import type { DefaultEventsMap } from "@socket.io/component-emitter";
 import type { User } from "@/store/slice/auth-slice";
+import { useContext } from "react";
 
 const SocketContext = createContext<Socket<
   DefaultEventsMap,
   DefaultEventsMap
 > | null>(null);
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useSocket = () => {
   //useContext(SocketContext);
   const { userInfo } = useAppStore();
@@ -25,9 +26,14 @@ export const useSocket = () => {
   }) as Socket<DefaultEventsMap, DefaultEventsMap>;
 };
 
+export const useSocketChannel = () => {
+  return useContext(SocketContext);
+};
+
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const { userInfo } = useAppStore();
   const socket = useRef<Socket<DefaultEventsMap, DefaultEventsMap>>(null);
+  // const socket = useRef<Socket<DefaultEventsMap, DefaultEventsMap>>(null);
 
   useEffect(() => {
     if (userInfo) {

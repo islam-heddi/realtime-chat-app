@@ -45,7 +45,12 @@ export default function Dashboard() {
               Friend Requests
             </div>
           </div>
-          <div>{userInfo.name} Dashboard</div>
+          <div
+            className="inline-block cursor-pointer"
+            onClick={() => navigate("/profile")}
+          >
+            {userInfo.name} Dashboard
+          </div>
           <div className="p-7">
             <div className="border-2 flex flex-row items-center justify-center">
               <Input
