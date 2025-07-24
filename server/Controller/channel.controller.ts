@@ -139,3 +139,13 @@ export const joinChannel = async (req: Request, res: Response) => {
     return res.status(500).send(error);
   }
 };
+
+export const getJoinedChannels = async (req: Request, res: Response) => {
+  const { memberId } = req.params;
+  try {
+    const result = await Channel.find({ members: memberId });
+    return res.status(200).send(result);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};

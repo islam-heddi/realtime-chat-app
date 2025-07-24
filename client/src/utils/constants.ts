@@ -21,3 +21,4 @@ export const GET_MESSAGES_ROUTE = "/chat/messages/";
 export const SEARCH_CHANNEL = "/channels/get";
 
 export const JOIN_CHANNEL = "/channels/join";
+export const JOINED_CHANNELS = "/channels/getMemberChannels/";

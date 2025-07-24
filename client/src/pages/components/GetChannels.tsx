@@ -50,7 +50,6 @@ export default function GetChannels() {
       ) : (
         <div className="p-5">No available channels</div>
       )}
-      <h1>Other Channels</h1>
     </div>
   );
 }

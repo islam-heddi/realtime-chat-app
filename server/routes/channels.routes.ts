@@ -3,6 +3,7 @@ import {
   createChannel,
   getChannelMessages,
   getChannels,
+  getJoinedChannels,
   getMyChannels,
   joinChannel,
 } from "../Controller/channel.controller";
@@ -14,5 +15,6 @@ route.get("/get", getChannels);
 route.get("/getMyChannels", verifyToken, getMyChannels);
 route.get("/getMessages/:id", getChannelMessages);
 route.post("/join", joinChannel);
+route.get("/getMemberChannels/:memberId", getJoinedChannels);
 
 export default route;
