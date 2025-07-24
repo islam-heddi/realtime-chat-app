@@ -18,6 +18,7 @@ export const createChannel = async (req: Request, res: Response) => {
       name,
       description: description || "",
       creatorId: id.id,
+      members: [id.id],
     });
 
     return res.status(201).json(newChannel);
@@ -105,5 +106,36 @@ export const sendMessageChannel = async (message: any) => {
     };
   } catch (error) {
     console.error("Error in addMessage:", error);
+  }
+};
+
+export const joinChannel = async (req: Request, res: Response) => {
+  const { channelId, newMemberId } = req.body;
+
+  try {
+    const ExistingChannel = await Channel.findById(channelId);
+    if (!ExistingChannel)
+      return res.status(400).send("there`is no channel with this id");
+
+    const condtion = ExistingChannel.members.filter((a) => a === newMemberId);
+
+    if (condtion.length > 0)
+      return res
+        .status(200)
+        .send({ status: "exist", message: "member already joined" });
+
+    const result = await Channel.updateOne(
+      {
+        _id: channelId,
+      },
+      { members: [...ExistingChannel.members, newMemberId] }
+    );
+
+    return res.status(200).send({
+      status: "joined",
+      message: "new member joined succesfully",
+    });
+  } catch (error) {
+    return res.status(500).send(error);
   }
 };

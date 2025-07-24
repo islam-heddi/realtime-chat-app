@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import type { ChannelSchema } from "@/Schema/channel.type";
-import { getMessagesChannels } from "@/utils/functions";
+import { getMessagesChannels, joinChannel } from "@/utils/functions";
 type User = {
   _id: string;
   name: string;
@@ -82,6 +82,7 @@ export default function SearchFriendChannel({ search }: { search: string }) {
     setSelectedChannelId(value._id);
     setSelectedChannelName(value.name);
     const PrevMsg = await getMessagesChannels(value._id);
+    await joinChannel(value._id, userInfo?._id as string);
     setSelectedChannelMessages(PrevMsg);
     navigate("/channel/chat");
   };

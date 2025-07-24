@@ -13,6 +13,10 @@ const channelSchema = new Schema({
     type: String,
     required: true,
   },
+  members: {
+    type: [String],
+    required: true,
+  },
 });
 
 export const Channel = model("Channel", channelSchema);

@@ -57,7 +57,7 @@ const setupSocket = (server: Server) => {
       channelId: message.receiverId,
     });
 
-    socket.to(senderSocketId).emit("recieve-message-channel", {
+    socket.broadcast.emit("recieve-message-channel", {
       isSeened: false,
       emiterId: message.senderId,
       emiterName: createMessage?.senderName,
@@ -77,7 +77,7 @@ const setupSocket = (server: Server) => {
       console.log("User ID not provided in handshake query");
     }
 
-    socket.setMaxListeners(100);
+    socket.setMaxListeners(10);
 
     socket.on("sendMessage", (message: any) => sendMessage(message, socket));
 

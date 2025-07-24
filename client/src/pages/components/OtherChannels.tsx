@@ -33,7 +33,7 @@ export default function GetChannels() {
 
   return (
     <div>
-      <h1>My Channels</h1>
+      <h1>Other Channels</h1>
       {myChannels.length > 0 ? (
         <div>
           {myChannels.map((value, index) => (

@@ -7,7 +7,7 @@ import { useAppChannelStore } from "@/store/index";
 import { useSocket } from "@/context/SocketContext";
 import { Button } from "@/components/ui/button";
 
-export default function ChatPageFr() {
+export default function ChatPageChannel() {
   const navigate = useNavigate();
   const [content, setContent] = useState("");
   const { userInfo } = useAppStore();
@@ -30,14 +30,17 @@ export default function ChatPageFr() {
   }, [selectedChannelMessages]);
 
   socket.on("recieve-message-channel", (message) => {
-    addMessage({
-      emiterId: message.senderId,
-      emiterName: message.emiterName,
-      receiverId: message.recieverId,
-      content: message.content,
-      createdAt: message.createdAt,
-      isSeened: false,
-    });
+    if (message.channelId == selectedChannelId) {
+      console.log("message received");
+      addMessage({
+        senderId: message.emiterId,
+        senderName: message.emiterName,
+        receiverId: message.channelId,
+        content: message.content,
+        createdAt: message.createdAt,
+        isSeened: false,
+      });
+    }
   });
 
   const handleSendMessage = () => {
