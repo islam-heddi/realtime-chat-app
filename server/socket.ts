@@ -2,6 +2,7 @@ import { Server } from "http";
 import { Socket, Server as SocketIOServer } from "socket.io";
 import { addMessage } from "./Controller/chat.controller";
 import { sendMessageChannel } from "./Controller/channel.controller";
+import { Channel } from "./Model/Channel.model";
 
 const setupSocket = (server: Server) => {
   const io = new SocketIOServer(server, {
@@ -57,14 +58,25 @@ const setupSocket = (server: Server) => {
       channelId: message.receiverId,
     });
 
-    socket.broadcast.emit("recieve-message-channel", {
-      isSeened: false,
-      emiterId: message.senderId,
-      emiterName: createMessage?.senderName,
-      channelId: message.receiverId,
-      createdAt: createMessage?.createdAt,
-      content: message.content,
-    });
+    const channel = await Channel.findById(message.receiverId);
+
+    const members = channel?.members;
+
+    if (channel && members) {
+      members.forEach((member) => {
+        const memberSocketId = userSocketMap.get(member);
+        if (memberSocketId) {
+          socket.to(memberSocketId).emit("recieve-message-channel", {
+            isSeened: false,
+            emiterId: message.senderId,
+            emiterName: createMessage?.senderName,
+            channelId: message.receiverId,
+            createdAt: createMessage?.createdAt,
+            content: message.content,
+          });
+        }
+      });
+    }
   };
 
   io.on("connection", (socket) => {
