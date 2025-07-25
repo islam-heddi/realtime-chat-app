@@ -7,6 +7,7 @@ export const getUserInfo = async (req: Request, res: Response) => {
     return res.status(200).send({
       name: user?.name,
       email: user?.email,
+      profileImgUrl: user?.profileImgUrl,
     });
   } catch (error) {
     return res.status(500).send(`error: ${error}`);

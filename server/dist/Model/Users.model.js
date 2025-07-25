@@ -6,5 +6,10 @@ const UserSchema = new mongoose_1.Schema({
     name: String,
     email: String,
     password: String,
+    profileImgUrl: {
+        require: false,
+        default: "",
+        type: String,
+    },
 });
 exports.User = (0, mongoose_1.model)("users", UserSchema);

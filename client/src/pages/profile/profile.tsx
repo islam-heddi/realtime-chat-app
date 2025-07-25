@@ -1,17 +1,36 @@
-import { SIGNOUT_AUTH_ROUTE } from "@/utils/constants";
+import {
+  SIGNOUT_AUTH_ROUTE,
+  UPDATE_PROFILE,
+  USER_AUTH_ROUTE,
+} from "@/utils/constants";
 import { apiClient } from "@/lib/api-client";
 import { useNavigate } from "react-router-dom";
 import { useAppStore } from "@/store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import pictureDefault from "@/../public/defaultProfile.png";
+import { toast } from "sonner";
 
 export default function ProfilePage() {
   const { userInfo, setUserInfo } = useAppStore();
   const navigate = useNavigate();
   const [name, setName] = useState<string>(userInfo?.name as string);
+  const [imageUrl, setImageUrl] = useState<string>("");
+
+  useEffect(() => {
+    apiClient
+      .get(USER_AUTH_ROUTE, { withCredentials: true })
+      .then((res) => {
+        setName(res.data?.name);
+        setImageUrl(res.data?.profileImgUrl);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("failed to get the profile data");
+      });
+  }, []);
 
   const handleSignOut = () => {
     setUserInfo(undefined);
@@ -19,6 +38,33 @@ export default function ProfilePage() {
       .get(SIGNOUT_AUTH_ROUTE, { withCredentials: true })
       .then(() => navigate("/"))
       .catch((err) => console.log(err));
+  };
+
+  const updateProfile = () => {
+    if (name == "") {
+      toast.error("name is empty");
+      return;
+    }
+
+    apiClient
+      .post(
+        UPDATE_PROFILE,
+        { name, profileImgUrl: imageUrl },
+        { withCredentials: true }
+      )
+      .then(() => {
+        toast.success("Updated successfully");
+        setUserInfo({
+          _id: userInfo?._id as string,
+          email: userInfo?.email as string,
+          name: userInfo?.name as string,
+          image: userInfo?.image,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("failed to update");
+      });
   };
 
   return (
@@ -42,7 +88,7 @@ export default function ProfilePage() {
               <img
                 width={225}
                 height={225}
-                src={pictureDefault}
+                src={imageUrl == "" ? pictureDefault : imageUrl}
                 alt="profile picture"
               />
             </div>
@@ -55,7 +101,9 @@ export default function ProfilePage() {
                 placeholder="change your name"
               />
             </div>
-            <Button className="m-5">Change</Button>
+            <Button onClick={() => updateProfile()} className="m-5">
+              Change
+            </Button>
           </div>
         </div>
       )}

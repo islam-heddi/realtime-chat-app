@@ -22,3 +22,5 @@ export const SEARCH_CHANNEL = "/channels/get";
 
 export const JOIN_CHANNEL = "/channels/join";
 export const JOINED_CHANNELS = "/channels/getMemberChannels/";
+
+export const UPDATE_PROFILE = "/user/profile";
