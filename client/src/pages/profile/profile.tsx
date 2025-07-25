@@ -18,6 +18,7 @@ export default function ProfilePage() {
   const navigate = useNavigate();
   const [name, setName] = useState<string>(userInfo?.name as string);
   const [imageUrl, setImageUrl] = useState<string>("");
+  const [update, setUpdate] = useState<boolean>(false);
 
   useEffect(() => {
     apiClient
@@ -84,13 +85,25 @@ export default function ProfilePage() {
           </div>
           <div>{userInfo.name} Dashboard</div>
           <div className="flex flex-row items-center">
-            <div>
+            <div
+              className={`relative`}
+              onMouseEnter={() => setUpdate(true)}
+              onMouseLeave={() => setUpdate(false)}
+            >
               <img
                 width={225}
                 height={225}
                 src={imageUrl == "" ? pictureDefault : imageUrl}
                 alt="profile picture"
               />
+              <div
+                className={`${
+                  update ? "block" : "hidden"
+                } absolute p-4 top-[30%] w-[200px] text-center`}
+              >
+                <p>Update a picture</p>
+                <Input type="file" accept="image/png, image/jpeg" />
+              </div>
             </div>
             <div className="m-5">
               <Label>Your name</Label>
