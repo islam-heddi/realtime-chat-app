@@ -9,11 +9,12 @@ import { useAppStore } from "@/store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import pictureDefault from "@/../public/defaultProfile.png";
 import { toast } from "sonner";
 
 export default function ProfilePage() {
+  const imgRef = useRef<HTMLInputElement>(null);
   const { userInfo, setUserInfo } = useAppStore();
   const navigate = useNavigate();
   const [name, setName] = useState<string>(userInfo?.name as string);
@@ -53,13 +54,14 @@ export default function ProfilePage() {
         { name, profileImgUrl: imageUrl },
         { withCredentials: true }
       )
-      .then(() => {
+      .then((res) => {
         toast.success("Updated successfully");
+        console.log(res);
         setUserInfo({
           _id: userInfo?._id as string,
-          email: userInfo?.email as string,
-          name: userInfo?.name as string,
-          image: userInfo?.image,
+          email: res.data.email as string,
+          name: res.data.name as string,
+          image: res.data.image,
         });
       })
       .catch((err) => {
@@ -67,6 +69,11 @@ export default function ProfilePage() {
         toast.error("failed to update");
       });
   };
+
+  useEffect(() => {
+    console.log(imgRef.current?.value);
+    console.log(imageUrl);
+  }, [imgRef.current?.value, imageUrl]);
 
   return (
     <div className="h-[100vh] w-[100vw] max-[833px]:w-full max-[833px]:h-full inline-flex items-center justify-center bg-[#deffff] p-6 rounded-2xl ">
@@ -102,7 +109,19 @@ export default function ProfilePage() {
                 } absolute p-4 top-[30%] w-[200px] text-center`}
               >
                 <p>Update a picture</p>
-                <Input type="file" accept="image/png, image/jpeg" />
+                <Input
+                  ref={imgRef}
+                  type="file"
+                  accept="image/png, image/jpeg"
+                  onChange={(e) => {
+                    const files = e.target.files;
+                    const file = files && files[0];
+                    if (file) {
+                      const fileURL = URL.createObjectURL(file);
+                      setImageUrl(fileURL);
+                    }
+                  }}
+                />
               </div>
             </div>
             <div className="m-5">

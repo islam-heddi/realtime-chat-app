@@ -7,15 +7,12 @@ export const updateProfile = async (req: Request, res: Response) => {
     const user = await User.findById(id?.id);
     if (!user) return res.status(400).send("user not found");
 
-    const result = await User.updateOne(
-      { _id: id?.id },
-      {
-        name,
-        profileImgUrl: pictureUrl,
-      }
-    );
+    const result = await User.findByIdAndUpdate(id?.id, {
+      name,
+      profileImgUrl: pictureUrl,
+    });
 
-    return res.status(201).send("updated successfully");
+    return res.status(201).send(result);
   } catch (error) {
     return res.status(500).send(`error: ${error}`);
   }
