@@ -44,43 +44,45 @@ export default function Register() {
   };
 
   return (
-    <div className="p-5">
-      <Label>Username</Label>
-      <Input
-        className="p-4 m-3"
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="enter your username"
-      />
-      <Label>Email</Label>
-      <Input
-        className="p-4 m-3"
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="m@example.com"
-      />
-      <Label>Password</Label>
-      <Input
-        className="p-4 m-3"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="***********"
-      />
-      <Button onClick={() => handleSubmit()} className="w-full">
-        Submit
-      </Button>
+    <div className="flex flex-col gap-5 w-full">
+      <div className="flex flex-col gap-2">
+        <Label className="text-sm font-semibold text-gray-700 ml-1">Username</Label>
+        <Input
+          className="h-12 px-4 rounded-xl border-gray-200 bg-gray-50/50 focus:bg-white transition-all outline-none"
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Enter your username"
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label className="text-sm font-semibold text-gray-700 ml-1">Email</Label>
+        <Input
+          className="h-12 px-4 rounded-xl border-gray-200 bg-gray-50/50 focus:bg-white transition-all outline-none"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="m@example.com"
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label className="text-sm font-semibold text-gray-700 ml-1">Password</Label>
+        <Input
+          className="h-12 px-4 rounded-xl border-gray-200 bg-gray-50/50 focus:bg-white transition-all outline-none"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="***********"
+        />
+      </div>
+
       <Button
-        className="w-full mt-4"
-        onClick={() => {
-          setName("");
-          setEmail("");
-          setPassword("");
-        }}
+        onClick={() => handleSubmit()}
+        className="h-12 w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl font-semibold shadow-lg shadow-purple-200 transition-all duration-300 hover:scale-[1.01] mt-2"
       >
-        Reset
+        Create Account
       </Button>
     </div>
   );
