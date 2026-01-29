@@ -10,10 +10,14 @@ export interface User {
 
 export interface AuthSlice {
   userInfo: User | undefined;
+  socketId: String | undefined;
   setUserInfo: (userInfo: User | undefined) => void;
+  setSocketId: (socketId: String | undefined) => void;
 }
 
 export const createAuthSlice: StateCreator<AuthSlice> = (set) => ({
   userInfo: undefined,
+  socketId: undefined,
   setUserInfo: (userInfo: User | undefined) => set({ userInfo }),
+  setSocketId: (socketId: String | undefined) => set({ socketId })
 });

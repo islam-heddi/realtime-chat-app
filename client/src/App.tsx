@@ -6,7 +6,7 @@ import ChatPageFr from "./pages/ChatPageFr";
 import FriendRequestPage from "./pages/FriendsRequests";
 import NewChannelPage from "./pages/channel/NewChannelPage";
 import ChannelChatPage from "./pages/channel/ChatPageChannel";
-import { SocketProvider } from "./context/SocketContext";
+import { SocketProvider } from "./context/SocketProvider";
 import { Toaster } from "sonner";
 import ProfilePage from "./pages/profile/profile";
 

@@ -25,6 +25,7 @@ export default function ChatPageFr() {
   }, [userInfo, navigate]);
 
   useEffect(() => {
+    console.log(selectedChatData)
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [selectedChatMessage]);
 
