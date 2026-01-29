@@ -17,16 +17,21 @@ export default function MyFriends() {
   useEffect(() => {
     apiClient
       .get(GET_MY_FRIENDS, { withCredentials: true })
-      .then((res) => setFriends(res.data))
+      .then((res) => {
+        console.log(res.data)
+        setFriends(res.data)
+      })
       .catch((err) => console.log(err));
   }, []);
 
   const handleSelectUser = (value: UserSchema, type: "friend" | "channel") => {
+    console.log(value)
     apiClient
       .get(`/chat/messages/${value._id}`, {
         withCredentials: true,
       })
       .then((response) => {
+        console.log(response.data)
         setSelectedChatMessage(response.data.messages);
       })
       .catch((error) => {
@@ -59,7 +64,7 @@ export default function MyFriends() {
           onClick={() =>
             handleSelectUser(
               {
-                _id: value.friendId,
+                _id: value.friendId != userInfo?._id ? value.friendId : value.userId,
                 name: value.friendName,
                 email: value.friendEmail,
               },
