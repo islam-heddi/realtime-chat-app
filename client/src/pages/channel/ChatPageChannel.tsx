@@ -35,6 +35,7 @@ export default function ChatPageChannel() {
     if (socket) {
       const handleReceiveMessage = (message: any) => {
         if (message.channelId === selectedChannelId) {
+          console.log(message);
           addMessage({
             senderId: message.emiterId,
             senderName: message.emiterName,
@@ -58,6 +59,14 @@ export default function ChatPageChannel() {
     if (content.trim() === "") return;
     const msgContent = content;
     setContent("");
+    addMessage({
+      senderId: userInfo?._id,
+      senderName: userInfo?.name,
+      receiverId: selectedChannelId,
+      content: msgContent,
+      createdAt: new Date(),
+      isSeened: false,
+    });
     socket.emit("send-message-channel", {
       senderId: userInfo?._id,
       receiverId: selectedChannelId,
